@@ -8,7 +8,10 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/satori/go.uuid"
 )
+
+// copy from github.com/gorilla/websocket example
 
 const (
 	// Time allowed to write a message to the peer.
@@ -131,14 +134,18 @@ func (c *Client) writePump() {
 }
 
 // serveWs handles websocket requests from the peer.
-func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request, uuid string) {
+func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request, uid string) {
+	if uid == "" {
+		uid = uuid.NewV4().String()
+	}
+
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), uuid: uuid}
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), uuid: uid}
 
 	client.hub.register <- client
 
