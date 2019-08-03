@@ -1,4 +1,4 @@
-package gin_webSocket
+package ws_chat
 
 const (
 	MsgEvent MessageEvent = "msg"

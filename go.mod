@@ -1,4 +1,4 @@
-module ericliao79/gin-webSocket
+module github.com/ericliao79/ws-chat
 
 go 1.12
 
