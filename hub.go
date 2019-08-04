@@ -68,7 +68,7 @@ func (h *Hub) Run() {
 	}
 }
 
-func (h *Hub) Broadcast(str string, event MessageEvent) {
+func (h *Hub) Broadcast(str interface{}, event MessageEvent) {
 	msg := message{
 		Event: event,
 		Data:  str,
@@ -79,7 +79,7 @@ func (h *Hub) Broadcast(str string, event MessageEvent) {
 	h.broadcast <- m
 }
 
-func (h *Hub) Send(uuid string, str string, event MessageEvent) {
+func (h *Hub) Send(uuid string, str interface{}, event MessageEvent) {
 	msg := message{
 		to:    uuid,
 		Event: event,

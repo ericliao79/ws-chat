@@ -9,5 +9,5 @@ type MessageEvent string
 type message struct {
 	to    string
 	Event MessageEvent `json:"event"`
-	Data  string       `json:"data"`
+	Data  interface{}  `json:"data"`
 }
