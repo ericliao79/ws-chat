@@ -1,9 +1,5 @@
 package ws_chat
 
-import (
-	"encoding/json"
-)
-
 // Hub maintains the set of active clients and broadcasts messages to the
 // clients.
 type Hub struct {
@@ -44,9 +40,8 @@ func (h *Hub) Run() {
 			}
 		case message := <-h.broadcast:
 			for client := range h.clients {
-				m, _ := json.Marshal(message)
 				select {
-				case client.send <- m:
+				case client.send <- message:
 				default:
 					close(client.send)
 					delete(h.clients, client)
@@ -55,9 +50,8 @@ func (h *Hub) Run() {
 		case message := <-h.sendTo:
 			for client := range h.clients {
 				if client.uuid == message.to {
-					m, _ := json.Marshal(message)
 					select {
-					case client.send <- m:
+					case client.send <- message:
 					default:
 						close(client.send)
 						delete(h.clients, client)

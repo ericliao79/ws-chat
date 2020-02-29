@@ -57,7 +57,7 @@ type Client struct {
 	uuid string
 
 	// Buffered channel of outbound messages.
-	send chan []byte
+	send chan message
 }
 
 // readPump pumps messages from the websocket connection to the hub.
@@ -129,7 +129,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request, uid string) {
 		return
 	}
 
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), uuid: uid}
+	client := &Client{hub: hub, conn: conn, send: make(chan message, 256), uuid: uid}
 
 	client.hub.register <- client
 
