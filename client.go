@@ -72,18 +72,21 @@ func (c *Client) readPump() {
 	}()
 	c.conn.SetReadLimit(maxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
-	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
-	//for {
-	//	_, message, err := c.conn.ReadMessage()
-	//	if err != nil {
-	//		if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-	//			log.Printf("error: %v", err)
-	//		}
-	//		break
-	//	}
-	//	//message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-	//	//c.hub.broadcast <- message
-	//}
+	c.conn.SetPongHandler(func(string) error {
+		c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil
+	})
+	for {
+		var msg message
+		err := c.conn.ReadJSON(&msg)
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				log.Printf("error: %v", err)
+			}
+			break
+		}
+		//message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+		//c.hub.broadcast <- message
+	}
 }
 
 // writePump pumps messages from the hub to the websocket connection.
