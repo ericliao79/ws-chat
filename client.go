@@ -112,6 +112,7 @@ func (c *Client) writePump() {
 
 			c.conn.WriteJSON(message)
 		case <-ticker.C:
+			log.Println("123")
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
